@@ -1,0 +1,3 @@
+package: github.com/maylukas/go-wordclock
+import:
+- package: github.com/mcuadros/go-rpi-ws281x
