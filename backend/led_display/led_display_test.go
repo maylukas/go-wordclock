@@ -2,14 +2,14 @@ package led_display
 
 import (
 	"testing"
-	"github.com/maylukas/go-wordclock/backend/display_model/model"
+	"github.com/maylukas/go-wordclock/backend/display_model/core"
 	"github.com/maylukas/go-wordclock/backend/display_model/api"
 	"golang.org/x/text/language"
 )
 
 func TestLedDisplay_mapIndex(t *testing.T) {
 	type fields struct {
-		model  model.Display
+		model core.Display
 		//strip  ws281x.Matrix
 		config Config
 	}

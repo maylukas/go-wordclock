@@ -2,7 +2,7 @@ package led_display
 
 import (
 	"time"
-	"github.com/maylukas/go-wordclock/backend/display_model/model"
+	"github.com/maylukas/go-wordclock/backend/display_model/core"
 	"github.com/maylukas/go-wordclock/backend/repository/config_repository"
 )
 
@@ -11,13 +11,13 @@ type LedDisplay interface {
 }
 
 type ledDisplayImpl struct {
-	model  model.Display
+	model  core.Display
 	config config_repository.Config
 	//strip ws281x.Matrix
 }
 
-func NewDisplay(model model.Display /*, config *ws281x.HardwareConfig*/) LedDisplay {
-	//def := model.GetDisplayDefinition()
+func NewDisplay(model core.Display /*, config *ws281x.HardwareConfig*/) LedDisplay {
+	//def := core.GetDisplayDefinition()
 	//s, err := ws281x.NewWS281x(def.LineLength * def.Lines, config)
 	//s.Initialize()
 	//if err != nil {
@@ -32,7 +32,7 @@ func NewDisplay(model model.Display /*, config *ws281x.HardwareConfig*/) LedDisp
 }
 
 func (l *ledDisplayImpl) UpdateDisplay(t time.Time) {
-	//indices := l.model.GetLedIndicesToLightUp(t)
+	//indices := l.core.GetLedIndicesToLightUp(t)
 
 	// Calculate the led indices to light up
 	// Will map the indices, if the flow should be alternated (See config)

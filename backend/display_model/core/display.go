@@ -1,11 +1,4 @@
-package model
-
-import "time"
-
-type DisplayDefinition struct {
-	Lines int
-	LineLength int
-}
+package core
 
 type Display interface {
 	GetLedIndicesToLightUp(time time.Time) []int

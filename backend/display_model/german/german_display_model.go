@@ -4,7 +4,7 @@ import (
 	"time"
 	"log"
 	"github.com/maylukas/go-wordclock/backend/display_model/utils"
-	"github.com/maylukas/go-wordclock/backend/display_model/model"
+	"github.com/maylukas/go-wordclock/backend/display_model/core"
 )
 
 type LedDisplayModel struct {
@@ -12,8 +12,8 @@ type LedDisplayModel struct {
 	hourWords    map[string][]int
 }
 
-func (disp *LedDisplayModel) GetDisplayDefinition() model.DisplayDefinition {
-	return model.DisplayDefinition{
+func (disp *LedDisplayModel) GetDisplayDefinition() core.DisplayDefinition {
+	return core.DisplayDefinition{
 		Lines: 10,
 		LineLength: 11,
 	}
