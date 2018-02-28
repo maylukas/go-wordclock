@@ -5,28 +5,46 @@ import (
 	"github.com/maylukas/go-wordclock/backend/display_model/core"
 	"github.com/maylukas/go-wordclock/backend/repository/config_repository"
 	led_display_core "github.com/maylukas/go-wordclock/backend/led_display/core"
-	"github.com/mcuadros/go-rpi-ws281x"
-	"log"
+	"fmt"
+	"github.com/jgarff/rpi_ws281x/golang/ws2811"
 )
 
 type ledDisplayImpl struct {
 	model  core.Display
 	config config_repository.Config
-	strip  ws281x.Matrix
 }
 
-func NewDisplay(model core.Display, config *ws281x.HardwareConfig) led_display_core.LedDisplay {
-	def := model.GetDisplayDefinition()
-	s, err := ws281x.NewWS281x(def.LineLength*def.Lines, config)
-	s.Initialize()
-	if err != nil {
-		log.Fatalf("Could not initialize LED strip: %v", err)
-	}
+func NewDisplay(model core.Display) led_display_core.LedDisplay {
+	fmt.Println("Initializing strip...")
 	c := config_repository.GetConfig()
-	return &ledDisplayImpl{
+	disp := &ledDisplayImpl{
 		model:  model,
 		config: c.DisplayConfig,
-		strip:  s,
+	}
+
+	var color uint32 = 0
+	color += 0 << 24
+	color += 0 << 16
+	color += 255 << 8
+	color += 255
+
+	for i := 0; i < 110; i++ {
+		disp.ResetStrip()
+		ws2811.SetLed(disp.mapIndex(i), color)
+		ws2811.Render()
+		time.Sleep(100 * time.Millisecond)
+	}
+	return disp
+}
+
+func (l *ledDisplayImpl) ResetStrip() {
+	for i := 0; i < 110; i++ {
+		var color uint32 = 0
+		color += 0 << 24
+		color += 0 << 16
+		color += 0 << 8
+		color += 0
+		ws2811.SetLed(l.mapIndex(i), color)
 	}
 }
 
@@ -36,10 +54,19 @@ func (l *ledDisplayImpl) UpdateDisplay(t time.Time) {
 	// Calculate the led indices to light up
 	// Will map the indices, if the flow should be alternated (See config)
 	calcIndices := l.calcIndices(indices)
+	fmt.Printf("Lighting up indices %v", calcIndices)
+	l.ResetStrip()
 	for _, ledIdx := range calcIndices {
-		l.strip.Set(ledIdx, l.config.Color)
+		r, g, b, a := l.config.Color.RGBA()
+		var color uint32 = 0
+		color += r << 24
+		color += g << 16
+		color += b << 8
+		color += a
+
+		ws2811.SetLed(ledIdx,color)
 	}
-	l.strip.Render()
+	ws2811.Render()
 }
 
 func (l *ledDisplayImpl) calcIndices(indices []int) []int {

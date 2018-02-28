@@ -33,6 +33,9 @@ func (disp *LedDisplayModel) getDispCharacts() string {
 }
 
 func (disp *LedDisplayModel) getNonHourWord(word string) []int {
+	if disp.nonHourWords == nil {
+		disp.nonHourWords = make(map[string][]int)
+	}
 	return utils.GetDisplayIndices(disp.nonHourWords, word, disp.getDispCharacts(), false)
 }
 
@@ -69,6 +72,9 @@ func (disp *LedDisplayModel) getWordForHour(hour int) string {
 }
 
 func (disp *LedDisplayModel) getIndicesForHour(hourWord string) []int {
+	if disp.hourWords == nil {
+		disp.hourWords = make(map[string][]int)
+	}
 	return utils.GetDisplayIndices(disp.hourWords, hourWord, disp.getDispCharacts(), true)
 }
 
