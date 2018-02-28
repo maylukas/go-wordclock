@@ -4,43 +4,42 @@ import (
 	"time"
 	"github.com/maylukas/go-wordclock/backend/display_model/core"
 	"github.com/maylukas/go-wordclock/backend/repository/config_repository"
+	led_display_core "github.com/maylukas/go-wordclock/backend/led_display/core"
+	"github.com/mcuadros/go-rpi-ws281x"
+	"log"
 )
-
-type LedDisplay interface {
-	UpdateDisplay(t time.Time)
-}
 
 type ledDisplayImpl struct {
 	model  core.Display
 	config config_repository.Config
-	//strip ws281x.Matrix
+	strip  ws281x.Matrix
 }
 
-func NewDisplay(model core.Display /*, config *ws281x.HardwareConfig*/) LedDisplay {
-	//def := core.GetDisplayDefinition()
-	//s, err := ws281x.NewWS281x(def.LineLength * def.Lines, config)
-	//s.Initialize()
-	//if err != nil {
-	//	log.Fatalf("Could not initialize LED strip: %v", err)
-	//}
+func NewDisplay(model core.Display, config *ws281x.HardwareConfig) led_display_core.LedDisplay {
+	def := model.GetDisplayDefinition()
+	s, err := ws281x.NewWS281x(def.LineLength*def.Lines, config)
+	s.Initialize()
+	if err != nil {
+		log.Fatalf("Could not initialize LED strip: %v", err)
+	}
 	c := config_repository.GetConfig()
-	c.DisplayConfig.Color.RGBA()
 	return &ledDisplayImpl{
 		model:  model,
 		config: c.DisplayConfig,
+		strip:  s,
 	}
 }
 
 func (l *ledDisplayImpl) UpdateDisplay(t time.Time) {
-	//indices := l.core.GetLedIndicesToLightUp(t)
+	indices := l.model.GetLedIndicesToLightUp(t)
 
 	// Calculate the led indices to light up
 	// Will map the indices, if the flow should be alternated (See config)
-	//calcIndices := l.calcIndices(indices)
-	//for _, ledIdx := range calcIndices {
-	//	l.strip.Set(ledIdx, l.config.Color)
-	//}
-	//l.strip.Render()
+	calcIndices := l.calcIndices(indices)
+	for _, ledIdx := range calcIndices {
+		l.strip.Set(ledIdx, l.config.Color)
+	}
+	l.strip.Render()
 }
 
 func (l *ledDisplayImpl) calcIndices(indices []int) []int {

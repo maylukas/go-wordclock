@@ -1,6 +1,14 @@
-hash: 03f14582e33001899b1f9110e218adfd3726e8fad91f49db6eb4dcda438b178c
-updated: 2018-02-15T19:11:46.538096+01:00
+hash: ed9049e062dba033aa9ebe24953013aac360a86ce445e739a54e94319d139bd0
+updated: 2018-02-25T12:45:20.6275129+01:00
 imports:
+- name: github.com/goji/httpauth
+  version: 2da839ab0f4df05a6db5eb277995589dadbd4fb9
 - name: github.com/mcuadros/go-rpi-ws281x
   version: 0d7c616b0b23b1f3cdad110ae59c26b549fa6e25
+- name: golang.org/x/text
+  version: 27420a1a391f5504f73155051cd274311bf70883
+  subpackages:
+  - internal/language
+  - internal/tag
+  - language
 testImports: []

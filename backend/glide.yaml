@@ -1,3 +1,4 @@
 package: github.com/maylukas/go-backend
 import:
 - package: github.com/mcuadros/go-rpi-ws281x
+- package: github.com/goji/httpauth
